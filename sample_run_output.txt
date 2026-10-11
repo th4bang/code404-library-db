@@ -1,0 +1,160 @@
+Database 'university_library' created from library_db.sql (24 statements).
+Connected to MySQL 8.0.46-0ubuntu0.24.04.4 at 127.0.0.1:3306, database 'university_library' (system date 2026-10-11).
+==============================================================================
+Q1  [SIMPLE]  Outstanding fines, largest first
+Purpose: Lets librarians see which fines still need to be collected.
+------------------------------------------------------------------------------
++---------+---------+-------------+---------+------------+
+| fine_id | loan_id | fine_amount | reason  | fine_date  |
++---------+---------+-------------+---------+------------+
+|       5 |      10 |      150.00 | Damaged | 2026-09-28 |
+|       4 |       9 |       40.00 | Overdue | 2026-10-02 |
+|       3 |       7 |       20.00 | Overdue | 2026-09-20 |
++---------+---------+-------------+---------+------------+
+3 row(s) in 1.1 ms
+==============================================================================
+Q2  [MEDIUM]  Collection size and availability per category
+Purpose: Shows which subject areas have few free copies so the library can
+         decide where to buy more copies. (INNER JOIN, COUNT, SUM, GROUP BY)
+------------------------------------------------------------------------------
++-------------------------+--------+--------------+------------------+
+| category_name           | titles | total_copies | available_copies |
++-------------------------+--------+--------------+------------------+
+| Databases               |      3 |            7 |                5 |
+| Biography               |      2 |            4 |                4 |
+| Operating Systems       |      2 |            4 |                3 |
+| Algorithms              |      1 |            2 |                1 |
+| Artificial Intelligence |      1 |            2 |                1 |
+| Literature              |      1 |            2 |                1 |
++-------------------------+--------+--------------+------------------+
+6 row(s) in 0.8 ms
+==============================================================================
+Q3  [MEDIUM]  Borrowing activity and fines per member
+Purpose: Identifies heavy borrowers and members who owe money, including
+         members who have never borrowed (LEFT JOIN). (LEFT JOIN, CONCAT,
+         COUNT, SUM, GROUP BY)
+------------------------------------------------------------------------------
++--------------------+-------------+-------------+-------------+
+| member_name        | member_type | total_loans | total_fines |
++--------------------+-------------+-------------+-------------+
+| Sipho Ndlovu       | Student     |           1 |      150.00 |
+| Aisha Patel        | Student     |           2 |       95.00 |
+| Naledi Khumalo     | Student     |           1 |       50.00 |
+| Zanele Nkosi       | Student     |           1 |       20.00 |
+| Thabo Mokoena      | Student     |           3 |        0.00 |
+| Lwazi Dlamini      | Student     |           2 |        0.00 |
+| Ruan van der Merwe | Student     |           2 |        0.00 |
+| Fatima Abrahams    | Student     |           1 |        0.00 |
+| Nomsa Zulu         | Staff       |           1 |        0.00 |
+| Pieter Botha       | Lecturer    |           1 |        0.00 |
+| Lerato Mahlangu    | Student     |           0 |        0.00 |
++--------------------+-------------+-------------+-------------+
+11 row(s) in 0.7 ms
+==============================================================================
+Q4  [COMPLEX]  Most popular titles (borrowed more than the average title) with authors
+Purpose: Supports purchasing decisions by showing which titles are in above-
+         average demand. (6 tables, nested subquery, GROUP_CONCAT, HAVING)
+------------------------------------------------------------------------------
++--------------------------------------------+-----------------------------------------------------------------+----------------+
+| title                                      | authors                                                         | times_borrowed |
++--------------------------------------------+-----------------------------------------------------------------+----------------+
+| Fundamentals of Database Systems           | Ramez Elmasri, Shamkant Navathe                                 |              3 |
+| Artificial Intelligence: A Modern Approach | Peter Norvig, Stuart Russell                                    |              2 |
+| Database System Concepts                   | Henry Korth, Abraham Silberschatz, S. Sudarshan                 |              2 |
+| Introduction to Algorithms                 | Thomas Cormen, Charles Leiserson, Ronald Rivest, Clifford Stein |              2 |
++--------------------------------------------+-----------------------------------------------------------------+----------------+
+4 row(s) in 1.2 ms
+==============================================================================
+Q5  [COMPLEX]  Fine income by category (HAVING with AND/OR, conditional SUM)
+Purpose: Shows which subject areas generate most fines and how much is still
+         unpaid, helping target reminders and loan-period policy.
+------------------------------------------------------------------------------
++-------------------------+--------------+-------------+-------------+
+| category_name           | fines_issued | total_fines | outstanding |
++-------------------------+--------------+-------------+-------------+
+| Literature              |            1 |      150.00 |      150.00 |
+| Databases               |            2 |       95.00 |       40.00 |
+| Artificial Intelligence |            1 |       50.00 |        0.00 |
++-------------------------+--------------+-------------+-------------+
+3 row(s) in 0.5 ms
+==============================================================================
+Q6  [SIMPLE]  Catalogue search by title keyword
+Purpose: Supports the 'members can search for books' workflow; shows the
+         newest matching titles first. (WHERE with LIKE, ORDER BY)
+------------------------------------------------------------------------------
++---------+---------------+----------------------------------------+------------------+
+| book_id | isbn          | title                                  | publication_year |
++---------+---------------+----------------------------------------+------------------+
+|       2 | 9780078022159 | Database System Concepts               |             2019 |
+|       1 | 9780133970777 | Fundamentals of Database Systems       |             2016 |
+|       3 | 9780132943260 | Database Systems: A Practical Approach |             2014 |
++---------+---------------+----------------------------------------+------------------+
+3 row(s) in 0.3 ms
+==============================================================================
+Q7  [MEDIUM]  Members with overdue loans, with estimated fines
+Purpose: Gives librarians a contact list of members who still hold copies past
+         their due date: how many copies, which titles, the longest delay and
+         the fine that will be charged if everything is returned today (R5.00
+         per day late). Copies already recorded as Lost are left out because
+         they are handled with a lost-book fine. The reference date comes from
+         @as_of and falls back to CURDATE() if it is not set. (4-table INNER
+         JOIN, derived table, subquery, CONCAT, DATEDIFF, COUNT, MAX, SUM,
+         GROUP BY)
+------------------------------------------------------------------------------
++---------------+---------------------------+---------------+--------------------------------------------+------------------+----------------+
+| member_name   | email                     | overdue_loans | titles                                     | max_days_overdue | estimated_fine |
++---------------+---------------------------+---------------+--------------------------------------------+------------------+----------------+
+| Lwazi Dlamini | lwazi.dlamini@myuwc.ac.za |             1 | Operating System Concepts                  |                7 |          35.00 |
+| Nomsa Zulu    | nomsa.zulu@uwc.ac.za      |             1 | Artificial Intelligence: A Modern Approach |                2 |          10.00 |
++---------------+---------------------------+---------------+--------------------------------------------+------------------+----------------+
+2 row(s) in 0.7 ms
+==============================================================================
+Q8  [MEDIUM]  Monthly lending activity by member type
+Purpose: Shows how many loans were issued each month, how many have come back,
+         how many came back late, how long copies are kept and each group's
+         share of all loans, so the library can review loan periods and
+         staffing. (INNER JOIN, DATE_FORMAT, COUNT, SUM, AVG, subquery, GROUP
+         BY)
+------------------------------------------------------------------------------
++------------+-------------+--------------+----------+--------------+---------------+------------------+
+| loan_month | member_type | loans_issued | returned | late_returns | avg_days_kept | pct_of_all_loans |
++------------+-------------+--------------+----------+--------------+---------------+------------------+
+| 2026-08    | Student     |            5 |        5 |            2 |          17.4 |             33.3 |
+| 2026-09    | Student     |            6 |        5 |            2 |          15.8 |             40.0 |
+| 2026-09    | Lecturer    |            1 |        0 |            0 |          NULL |              6.7 |
+| 2026-09    | Staff       |            1 |        0 |            0 |          NULL |              6.7 |
+| 2026-10    | Student     |            2 |        0 |            0 |          NULL |             13.3 |
++------------+-------------+--------------+----------+--------------+---------------+------------------+
+5 row(s) in 0.5 ms
+==============================================================================
+Q9  [COMPLEX]  Members flagged for review: repeat late returners or high fines
+Purpose: Helps the library decide whom to warn or suspend. A member is flagged
+         if they returned at least two loans late AND their late-return rate
+         is above the library-wide rate (nested subquery), OR their fines
+         total R100 or more. (3 tables, LEFT JOIN, subquery, HAVING with
+         AND/OR)
+------------------------------------------------------------------------------
++--------------+-------------+-----------+----------------+--------------+---------------+-------------+
+| member_name  | member_type | status    | returned_loans | late_returns | late_rate_pct | total_fines |
++--------------+-------------+-----------+----------------+--------------+---------------+-------------+
+| Sipho Ndlovu | Student     | Suspended |              1 |            0 |           0.0 |      150.00 |
+| Aisha Patel  | Student     | Active    |              2 |            2 |         100.0 |       95.00 |
++--------------+-------------+-----------+----------------+--------------+---------------+-------------+
+2 row(s) in 0.7 ms
+==============================================================================
+Q10  [COMPLEX]  Worn or withdrawn copies that are still in demand
+Purpose: Tells the library which poor-condition copies to repair or replace
+         first: copies that are Fair/Damaged, or Under Repair/Lost, and whose
+         number of loans is at least the library-wide average per copy. (5
+         tables, LEFT JOIN, AND/OR, scalar subqueries in HAVING, MAX)
+------------------------------------------------------------------------------
++---------+----------------------------------------+---------+---------------+----------------+------------------+---------------------+--------------+-------------+
+| copy_id | title                                  | copy_no | category_name | publisher_name | condition_status | availability_status | times_loaned | last_loaned |
++---------+----------------------------------------+---------+---------------+----------------+------------------+---------------------+--------------+-------------+
+|      18 | Things Fall Apart                      |       1 | Literature    | Heinemann      | Damaged          | Under Repair        |            1 | 2026-09-15  |
+|      14 | Long Walk to Freedom                   |       1 | Biography     | Little, Brown  | Fair             | Available           |            1 | 2026-09-02  |
+|       6 | Database Systems: A Practical Approach |       1 | Databases     | Pearson        | Fair             | Available           |            1 | 2026-08-20  |
++---------+----------------------------------------+---------+---------------+----------------+------------------+---------------------+--------------+-------------+
+3 row(s) in 0.9 ms
+==============================================================================
+SUMMARY: 10/10 queries executed successfully (total 7.3 ms)

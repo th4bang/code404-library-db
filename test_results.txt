@@ -1,0 +1,186 @@
+Environment: Python 3.12.3 | MySQL 8.0.46-0ubuntu0.24.04.4 | Name: mysql-connector-python Version: 26.7.0 
+Command: python -m unittest -v test_library
+
+test_A01_all_ten_tables_exist (test_library.TestA_Schema.test_A01_all_ten_tables_exist)
+The database contains exactly the ten designed tables. ... ok
+test_A02_every_table_has_a_primary_key (test_library.TestA_Schema.test_A02_every_table_has_a_primary_key)
+Each of the ten tables has a PRIMARY KEY. ... ok
+test_A03_foreign_keys_match_the_design (test_library.TestA_Schema.test_A03_foreign_keys_match_the_design)
+The ten foreign keys link exactly the tables shown in the ERD. ... ok
+test_A04_unique_constraints_exist (test_library.TestA_Schema.test_A04_unique_constraints_exist)
+Natural keys (ISBN, campus number, e-mail ...) are UNIQUE. ... ok
+test_A05_eight_check_constraints_exist (test_library.TestA_Schema.test_A05_eight_check_constraints_exist)
+The eight CHECK constraints of the design are present and enforced. ... ok
+test_A06_row_counts_match_the_sample_data (test_library.TestA_Schema.test_A06_row_counts_match_the_sample_data)
+Every table holds the number of rows described in Section 5.2. ... ok
+test_A07_tables_use_innodb (test_library.TestA_Schema.test_A07_tables_use_innodb)
+All tables use InnoDB, which enforces foreign keys and transactions. ... ok
+test_B01_negative_fine_rejected (test_library.TestB_Constraints.test_B01_negative_fine_rejected)
+CHECK: a fine amount cannot be negative. ... ok
+test_B02_second_fine_for_one_loan_rejected (test_library.TestB_Constraints.test_B02_second_fine_for_one_loan_rejected)
+UNIQUE: a loan can have at most one fine. ... ok
+test_B03_due_date_before_loan_date_rejected (test_library.TestB_Constraints.test_B03_due_date_before_loan_date_rejected)
+CHECK: the due date cannot be before the loan date. ... ok
+test_B04_unknown_category_rejected (test_library.TestB_Constraints.test_B04_unknown_category_rejected)
+FOREIGN KEY: a book cannot reference a category that does not exist. ... ok
+test_B05_duplicate_isbn_rejected (test_library.TestB_Constraints.test_B05_duplicate_isbn_rejected)
+UNIQUE: two books cannot share an ISBN. ... ok
+test_B06_publication_year_out_of_range_rejected (test_library.TestB_Constraints.test_B06_publication_year_out_of_range_rejected)
+CHECK: publication year must be between 1000 and 2100. ... ok
+test_B07_invalid_member_email_rejected (test_library.TestB_Constraints.test_B07_invalid_member_email_rejected)
+CHECK: a member's e-mail must look like name@domain. ... ok
+test_B08_duplicate_campus_number_rejected (test_library.TestB_Constraints.test_B08_duplicate_campus_number_rejected)
+UNIQUE: two members cannot share a campus number. ... ok
+test_B09_invalid_member_type_rejected (test_library.TestB_Constraints.test_B09_invalid_member_type_rejected)
+ENUM: member_type must be Student, Lecturer or Staff. ... ok
+test_B10_missing_required_value_rejected (test_library.TestB_Constraints.test_B10_missing_required_value_rejected)
+NOT NULL: a member must have a first name. ... ok
+test_B11_copy_number_zero_rejected (test_library.TestB_Constraints.test_B11_copy_number_zero_rejected)
+CHECK: copy numbers start at 1. ... ok
+test_B12_duplicate_copy_number_for_a_book_rejected (test_library.TestB_Constraints.test_B12_duplicate_copy_number_for_a_book_rejected)
+UNIQUE (book_id, copy_no): a book cannot have two copy number 1s. ... ok
+test_B13_return_date_without_receiver_rejected (test_library.TestB_Constraints.test_B13_return_date_without_receiver_rejected)
+CHECK: a returned loan must record the librarian who received it. ... ok
+test_B14_return_date_before_loan_date_rejected (test_library.TestB_Constraints.test_B14_return_date_before_loan_date_rejected)
+CHECK: a loan cannot be returned before it was issued. ... ok
+test_B15_category_with_books_cannot_be_deleted (test_library.TestB_Constraints.test_B15_category_with_books_cannot_be_deleted)
+RESTRICT: deleting a category that still has books is refused. ... ok
+test_B16_member_with_loans_cannot_be_deleted (test_library.TestB_Constraints.test_B16_member_with_loans_cannot_be_deleted)
+FOREIGN KEY: loan history keeps a member from being deleted. ... ok
+test_B17_author_cannot_be_linked_to_a_book_twice (test_library.TestB_Constraints.test_B17_author_cannot_be_linked_to_a_book_twice)
+Composite PRIMARY KEY of Author_Book blocks duplicate links. ... ok
+test_B18_on_delete_cascade_removes_author_links (test_library.TestB_Constraints.test_B18_on_delete_cascade_removes_author_links)
+ON DELETE CASCADE: deleting a book also deletes its Author_Book rows. ... ok
+test_B19_on_update_cascade_follows_publisher_id (test_library.TestB_Constraints.test_B19_on_update_cascade_follows_publisher_id)
+ON UPDATE CASCADE: changing a publisher id updates its books. ... ok
+test_B20_default_values_are_applied (test_library.TestB_Constraints.test_B20_default_values_are_applied)
+DEFAULTs: new copy = Good/Available, new fine = Unpaid, new member = Active. ... ok
+test_B21_valid_rows_are_accepted (test_library.TestB_Constraints.test_B21_valid_rows_are_accepted)
+Positive control: correct data is accepted (the checks are not over-strict). ... ok
+test_C01_q1_outstanding_fines (test_library.TestC_Queries.test_C01_q1_outstanding_fines)
+Q1 (simple) returns the three unpaid fines, largest first. ... ok
+test_C02_q2_collection_per_category (test_library.TestC_Queries.test_C02_q2_collection_per_category)
+Q2 (medium) returns copies and availability for the six categories. ... ok
+test_C03_q3_member_activity_and_fines (test_library.TestC_Queries.test_C03_q3_member_activity_and_fines)
+Q3 (medium) returns all 11 members, including the one with no loans. ... ok
+test_C04_q4_titles_in_above_average_demand (test_library.TestC_Queries.test_C04_q4_titles_in_above_average_demand)
+Q4 (complex) returns the four titles borrowed more than the 1.5 average. ... ok
+test_C05_q5_fine_income_by_category (test_library.TestC_Queries.test_C05_q5_fine_income_by_category)
+Q5 (complex) returns the three categories passing the HAVING filter. ... ok
+test_C06_q6_catalogue_search (test_library.TestC_Queries.test_C06_q6_catalogue_search)
+Q6 (simple) finds the three 'Database' titles, newest first. ... ok
+test_C07_q7_overdue_loans (test_library.TestC_Queries.test_C07_q7_overdue_loans)
+Q7 (medium) lists the two members with overdue loans on 2026-10-11 and their R5/day fines. ... ok
+test_C08_q8_monthly_activity (test_library.TestC_Queries.test_C08_q8_monthly_activity)
+Q8 (medium) summarises loans per month and member type, with each share of all loans. ... ok
+test_C09_q9_members_flagged (test_library.TestC_Queries.test_C09_q9_members_flagged)
+Q9 (complex) flags the repeat late returner and the high-fine member. ... ok
+test_C10_q10_worn_copies_in_demand (test_library.TestC_Queries.test_C10_q10_worn_copies_in_demand)
+Q10 (complex) lists the three worn copies loaned at least the average. ... ok
+test_C11_script_queries_match_the_sql_file (test_library.TestC_Queries.test_C11_script_queries_match_the_sql_file)
+The SQL in queries.py is identical to the queries in library_db.sql. ... ok
+test_C12_query_mix_meets_the_assignment (test_library.TestC_Queries.test_C12_query_mix_meets_the_assignment)
+Ten queries: 2 simple, 4 medium, 4 complex; each uses the required features. ... ok
+test_C13_cross_checks_against_independent_counts (test_library.TestC_Queries.test_C13_cross_checks_against_independent_counts)
+Totals in the query results agree with simple counts on the base tables. ... ok
+test_C14_q7_uses_the_reference_date (test_library.TestC_Queries.test_C14_q7_uses_the_reference_date)
+Q7 changes with @as_of: 4 members overdue on 2026-10-20, none on 2026-09-01. ... ok
+test_C15_q7_falls_back_to_curdate_when_as_of_is_unset (test_library.TestC_Queries.test_C15_q7_falls_back_to_curdate_when_as_of_is_unset)
+If @as_of is NULL, Q7 uses CURDATE() instead of returning nothing or failing. ... ok
+test_C16_q7_leaves_out_lost_copies (test_library.TestC_Queries.test_C16_q7_leaves_out_lost_copies)
+Q7 ignores a copy already recorded as Lost (handled with a lost-book fine instead). ... ok
+test_D01_search_by_title_keyword (test_library.TestD_Application.test_D01_search_by_title_keyword)
+Searching 'algor' finds Introduction to Algorithms with 1 free copy. ... ok
+test_D02_search_by_author_name (test_library.TestD_Application.test_D02_search_by_author_name)
+Searching an author's name ('Mandela') finds that author's book. ... ok
+test_D03_search_is_case_insensitive (test_library.TestD_Application.test_D03_search_is_case_insensitive)
+'DATABASE' and 'database' return the same three books. ... ok
+test_D04_search_without_match_returns_no_rows (test_library.TestD_Application.test_D04_search_without_match_returns_no_rows)
+A keyword that matches nothing gives an empty result, not an error. ... ok
+test_D05_empty_search_is_rejected (test_library.TestD_Application.test_D05_empty_search_is_rejected)
+An empty search word gives a clear message. ... ok
+test_D06_sql_injection_attempt_is_harmless (test_library.TestD_Application.test_D06_sql_injection_attempt_is_harmless)
+A malicious keyword is treated as plain text: no rows, all tables intact. ... ok
+test_D07_like_wildcards_typed_by_user_are_literal (test_library.TestD_Application.test_D07_like_wildcards_typed_by_user_are_literal)
+Typing % or _ does not match every title. ... ok
+test_D08_member_loans_show_status (test_library.TestD_Application.test_D08_member_loans_show_status)
+Thabo's 3 loans show two Returned and one On loan; Lwazi's open loan is Overdue. ... ok
+test_D09_unknown_member_is_reported (test_library.TestD_Application.test_D09_unknown_member_is_reported)
+Asking for loans of a campus number that does not exist gives a clear message. ... ok
+test_D10_borrow_available_copy (test_library.TestD_Application.test_D10_borrow_available_copy)
+Borrowing creates a 14-day loan and marks the copy On Loan. ... ok
+test_D11_borrow_copy_already_on_loan_is_refused (test_library.TestD_Application.test_D11_borrow_copy_already_on_loan_is_refused)
+A copy that is On Loan cannot be lent again; nothing changes. ... ok
+test_D12_suspended_member_cannot_borrow (test_library.TestD_Application.test_D12_suspended_member_cannot_borrow)
+A Suspended member (Sipho) is refused. ... ok
+test_D13_unknown_member_copy_or_librarian_is_refused (test_library.TestD_Application.test_D13_unknown_member_copy_or_librarian_is_refused)
+Unknown member, copy or librarian each give a clear message and no change. ... ok
+test_D14_under_repair_copy_cannot_be_borrowed (test_library.TestD_Application.test_D14_under_repair_copy_cannot_be_borrowed)
+Copy 18 (Damaged, Under Repair) cannot be lent. ... ok
+test_D15_inconsistent_record_is_caught (test_library.TestD_Application.test_D15_inconsistent_record_is_caught)
+A copy wrongly marked Available while it has an open loan is refused. ... ok
+test_D16_failed_borrow_is_rolled_back (test_library.TestD_Application.test_D16_failed_borrow_is_rolled_back)
+If the copy update fails after the loan was inserted, the loan is rolled back. ... ok
+test_D17_second_borrower_waits_then_is_refused (test_library.TestD_Application.test_D17_second_borrower_waits_then_is_refused)
+Two librarians lend copy 1 at once: the second waits for the lock, then is refused. ... ok
+test_D18_return_on_time_has_no_fine (test_library.TestD_Application.test_D18_return_on_time_has_no_fine)
+Returning before the due date closes the loan, frees the copy, creates no fine. ... ok
+test_D19_late_return_creates_overdue_fine (test_library.TestD_Application.test_D19_late_return_creates_overdue_fine)
+Loan 12 (due 10-04) returned 10-11 is 7 days late: R35.00 Overdue, Unpaid. ... ok
+test_D20_damaged_return_creates_flat_fine_and_repair_status (test_library.TestD_Application.test_D20_damaged_return_creates_flat_fine_and_repair_status)
+A copy returned Damaged gets the R150.00 fine and goes Under Repair. ... ok
+test_D21_damaged_and_late_gets_one_fine_only (test_library.TestD_Application.test_D21_damaged_and_late_gets_one_fine_only)
+A copy that is both late and damaged still gets a single (damage) fine. ... ok
+test_D22_return_of_copy_not_on_loan_is_refused (test_library.TestD_Application.test_D22_return_of_copy_not_on_loan_is_refused)
+Returning a copy that is Available is refused. ... ok
+test_D23_return_with_unknown_librarian_changes_nothing (test_library.TestD_Application.test_D23_return_with_unknown_librarian_changes_nothing)
+An unknown librarian is refused and the loan stays open. ... ok
+test_D24_return_before_loan_date_is_refused (test_library.TestD_Application.test_D24_return_before_loan_date_is_refused)
+A return date earlier than the loan date is refused with a clear message. ... ok
+test_D25_invalid_condition_is_refused (test_library.TestD_Application.test_D25_invalid_condition_is_refused)
+Only New, Good, Fair or Damaged are accepted as the return condition. ... ok
+test_D26_borrow_then_return_round_trip (test_library.TestD_Application.test_D26_borrow_then_return_round_trip)
+Borrow + return leaves the copy Available and adds exactly one closed loan. ... ok
+test_D27_late_round_trip_fine_matches_rate (test_library.TestD_Application.test_D27_late_round_trip_fine_matches_rate)
+Borrowed 10-11, returned 11-01 (due 10-25): 7 days late = R35.00. ... ok
+test_D28_lock_wait_timeout_is_a_database_error (test_library.TestD_Application.test_D28_lock_wait_timeout_is_a_database_error)
+If the lock is not released in time, the borrow fails with error 1205 and changes nothing. ... ok
+test_E01_all_business_rule_invariants_hold (test_library.TestE_Consistency.test_E01_all_business_rule_invariants_hold)
+Eight data-quality rules have zero violations in the sample data. ... ok
+test_E02_loan_period_is_fourteen_days (test_library.TestE_Consistency.test_E02_loan_period_is_fourteen_days)
+Every sample loan has a due date exactly 14 days after the loan date. ... ok
+test_E03_every_book_has_a_category_publisher_author_and_copy (test_library.TestE_Consistency.test_E03_every_book_has_a_category_publisher_author_and_copy)
+No book is missing a required relationship. ... ok
+test_F01_sql_splitter_handles_comments_and_quotes (test_library.TestF_Plumbing.test_F01_sql_splitter_handles_comments_and_quotes)
+';' inside a string and comment text do not split statements. ... ok
+test_F02_the_real_sql_file_splits_into_expected_statements (test_library.TestF_Plumbing.test_F02_the_real_sql_file_splits_into_expected_statements)
+library_db.sql yields 11 DDL + 1 DB statements, inserts and the 10 queries. ... ok
+test_F03_table_formatter (test_library.TestF_Plumbing.test_F03_table_formatter)
+NULL, decimals and dates print as expected; numbers are right-aligned. ... ok
+test_F04_like_pattern_escapes_wildcards (test_library.TestF_Plumbing.test_F04_like_pattern_escapes_wildcards)
+% and _ typed by a user are escaped before they reach LIKE. ... ok
+test_F05_as_of_parsing (test_library.TestF_Plumbing.test_F05_as_of_parsing)
+--as-of accepts ISO dates and 'today' and rejects anything else. ... ok
+test_F06_config_precedence (test_library.TestF_Plumbing.test_F06_config_precedence)
+Command-line options beat environment variables, which beat defaults. ... ok
+test_F07_wrong_credentials_give_friendly_message (test_library.TestF_Plumbing.test_F07_wrong_credentials_give_friendly_message)
+A wrong user/password raises DatabaseConnectionError that names the fix. ... ok
+test_F08_unreachable_server_gives_friendly_message (test_library.TestF_Plumbing.test_F08_unreachable_server_gives_friendly_message)
+A closed port raises DatabaseConnectionError mentioning host and port. ... ok
+test_F09_missing_database_suggests_setup (test_library.TestF_Plumbing.test_F09_missing_database_suggests_setup)
+Connecting to a database that does not exist suggests --setup. ... ok
+test_F10_error_message_table (test_library.TestF_Plumbing.test_F10_error_message_table)
+describe_connection_error covers the common MySQL error numbers. ... ok
+test_F11_setup_rejects_unsafe_database_names (test_library.TestF_Plumbing.test_F11_setup_rejects_unsafe_database_names)
+A database name with quotes or spaces is refused before any SQL is built. ... ok
+test_F12_command_line_runs_all_ten_queries (test_library.TestF_Plumbing.test_F12_command_line_runs_all_ten_queries)
+`python app.py` executes Q1-Q10 and reports 10/10 with exit code 0. ... ok
+test_F13_command_line_single_query_and_bad_number (test_library.TestF_Plumbing.test_F13_command_line_single_query_and_bad_number)
+`--query 7` runs one query; `--query 11` is rejected with exit code 2. ... ok
+test_F14_menu_session_reads_input_and_exits (test_library.TestF_Plumbing.test_F14_menu_session_reads_input_and_exits)
+The interactive menu handles a short scripted session without crashing. ... ok
+
+----------------------------------------------------------------------
+Ran 89 tests in 18.817s
+
+OK
