@@ -1,6 +1,6 @@
 -- =====================================================================
 -- CSC312 Practical Assignment 2 - University Library Lending System
--- Team Name : Code 404
+-- Team Name : Error 404
 
 -- =====================================================================
 
