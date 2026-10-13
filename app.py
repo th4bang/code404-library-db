@@ -1,8 +1,7 @@
 """
 =====================================================================
-Team Name       : Code 404
-Student numbers : <STUDENT_NO_1>, <STUDENT_NO_2>, <STUDENT_NO_3>,
-                  <STUDENT_NO_4>, <STUDENT_NO_5>
+Team Name       : Error 404
+Student numbers : VIWE BOOI (4426787) , ZAMABHELE LALALA (4495598) , THABANG MAKAMOLE (4405937) , BOIPELO SENTSHO (4420815) , BUHLE SOTYIWA (4483292)
 File name       : app.py
 Course          : CSC312 - Practical Assignment 2 (University of the Western Cape)
 Project         : University Library Lending System (MySQL + Python)
